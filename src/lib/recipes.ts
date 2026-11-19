@@ -6,10 +6,14 @@ export type Category = (typeof CATEGORIES)[number];
 export const YIELD_UNITS = ["Unidades", "Kg", "Gramas", "Formas", "Assadeiras", "Litros"];
 export const ING_UNITS = ["Kg", "g", "L", "ml", "Unidades", "Colheres", "Xícaras"];
 
+export const ITEM_UNITS = ["unidades", "bolos", "rocamboles", "pacotes", "porções"];
+export const EACH_UNITS = ["kg", "g", "ml", "L"];
+
 export type Ingredient = { id: string; name: string; qty: string; unit: string };
 export type Recipe = {
   id: string; name: string; category: Category; image?: string;
-  yieldQty: string; yieldUnit: string; ingredients: Ingredient[];
+  yieldQty: string; yieldUnit: string;
+  yieldMode?: "simples" | "composto"; yieldItemUnit?: string; yieldEach?: string; yieldEachUnit?: string; ingredients: Ingredient[];
   equipment: string; preparation: string; updatedAt: number;
 };
 
@@ -49,4 +53,17 @@ export function filterRecipes(list: Recipe[], q: string, cat: string) {
   const s = q.trim().toLowerCase();
   return list.filter((r) => (cat === "Todas" || r.category === cat) &&
     (!s || r.name.toLowerCase().includes(s) || r.ingredients.some((i) => i.name.toLowerCase().includes(s))));
+}
+
+const num = (v: string) => Number(String(v).replace(",", "."));
+const fmt = (n: number) => n.toLocaleString("pt-BR", { maximumFractionDigits: 3 });
+export function formatYield(r: Pick<Recipe, "yieldQty" | "yieldUnit" | "yieldMode" | "yieldItemUnit" | "yieldEach" | "yieldEachUnit">) {
+  if (r.yieldMode !== "composto") return `${r.yieldQty} ${r.yieldUnit}`;
+  return `${r.yieldQty} ${r.yieldItemUnit ?? "unidades"} de ${r.yieldEach} ${r.yieldEachUnit}`;
+}
+export function yieldTotal(r: Pick<Recipe, "yieldQty" | "yieldMode" | "yieldEach" | "yieldEachUnit">): string | null {
+  if (r.yieldMode !== "composto" || !["kg", "g"].includes(r.yieldEachUnit ?? "")) return null;
+  const g = num(r.yieldQty) * num(r.yieldEach ?? "") * (r.yieldEachUnit === "kg" ? 1000 : 1);
+  if (!isFinite(g) || g <= 0) return null;
+  return g >= 1000 ? `${fmt(g / 1000)} kg` : `${fmt(g)} g`;
 }

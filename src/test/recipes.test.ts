@@ -6,3 +6,10 @@ describe("busca de fichas", () => {
   it("busca por ingrediente", () => expect(filterRecipes(list, "coco", "Todas").map((x) => x.id)).toEqual(["Bolo de Macaxeira"]));
   it("filtra por categoria", () => expect(filterRecipes(list, "", "Rocamboles").map((x) => x.id)).toEqual(["Rocambole"]));
 });
+import { formatYield, yieldTotal } from "@/lib/recipes";
+describe("rendimento", () => {
+  it("simples", () => expect(formatYield({ yieldQty: "12", yieldUnit: "Kg" })).toBe("12 Kg"));
+  it("composto", () => expect(formatYield({ yieldQty: "12", yieldUnit: "", yieldMode: "composto", yieldItemUnit: "unidades", yieldEach: "1", yieldEachUnit: "kg" })).toBe("12 unidades de 1 kg"));
+  it("total em kg", () => expect(yieldTotal({ yieldQty: "30", yieldMode: "composto", yieldEach: "90", yieldEachUnit: "g" })).toBe("2,7 kg"));
+  it("sem total para ml", () => expect(yieldTotal({ yieldQty: "3", yieldMode: "composto", yieldEach: "500", yieldEachUnit: "ml" })).toBeNull());
+});

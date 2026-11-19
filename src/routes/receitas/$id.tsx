@@ -3,9 +3,10 @@ import { useRef, useState } from "react";
 import { ArrowLeft, FileDown, Pencil, Printer, Trash2 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
-import { deleteRecipe } from "@/lib/recipes";
+import { deleteRecipe, formatYield, yieldTotal } from "@/lib/recipes";
 import { useRecipes } from "@/lib/use-recipes";
-import logo from "@/assets/logo-casa-do-sertao.png";
+import logoAsset from "@/assets/logo_casa_sertao.png.asset.json";
+const logo = logoAsset.url;
 
 export const Route = createFileRoute("/receitas/$id")({
   head: () => ({ meta: [{ title: "Ficha Técnica · Casa do Sertão" }, { name: "description", content: "Ficha técnica de produção para impressão e PDF." },
@@ -62,7 +63,8 @@ function View() {
         <div className="mt-5 grid grid-cols-[1fr_200px] gap-5">
           <table className="h-fit w-full border-collapse text-sm"><tbody>
             <tr><th className={th}>Categoria</th><td className={td}>{r.category}</td></tr>
-            <tr><th className={th}>Rendimento</th><td className={td}>{r.yieldQty} {r.yieldUnit}</td></tr>
+            <tr><th className={th}>Rendimento</th><td className={td}>{formatYield(r)}</td></tr>
+            {yieldTotal(r) && <tr><th className={th}>Total estimado</th><td className={td}>{yieldTotal(r)}</td></tr>}
             <tr><th className={th}>Nº de matérias-primas</th><td className={td}>{r.ingredients.length}</td></tr>
           </tbody></table>
           {r.image && <img src={r.image} alt={r.name} className="aspect-[4/3] w-full rounded border border-sheet-line object-cover" />}

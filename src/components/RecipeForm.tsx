@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CATEGORIES, ING_UNITS, YIELD_UNITS, uid, upsertRecipe, type Category, type Recipe } from "@/lib/recipes";
+import { Switch } from "@/components/ui/switch";
+import { CATEGORIES, EACH_UNITS, ING_UNITS, ITEM_UNITS, YIELD_UNITS, formatYield, yieldTotal, uid, upsertRecipe, type Category, type Recipe } from "@/lib/recipes";
 
 const empty = (): Recipe => ({ id: uid(), name: "", category: "Bolos Fofos", yieldQty: "", yieldUnit: "Unidades",
   ingredients: [{ id: uid(), name: "", qty: "", unit: "g" }], equipment: "", preparation: "", updatedAt: Date.now() });
@@ -41,11 +42,23 @@ export function RecipeForm({ initial }: { initial?: Recipe }) {
         </div>
         {r.image && <Button type="button" variant="ghost" size="sm" onClick={() => set("image", undefined)}>Remover foto</Button>}
       </section>
-      <section className={section}><h2 className="font-display text-xl font-semibold text-primary">Rendimento</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5"><Label>Quantidade</Label><Input required type="number" step="any" min="0" value={r.yieldQty} onChange={(e) => set("yieldQty", e.target.value)} /></div>
-          <div className="space-y-1.5"><Label>Unidade</Label><select className={sel} value={r.yieldUnit} onChange={(e) => set("yieldUnit", e.target.value)}>{YIELD_UNITS.map((u) => <option key={u}>{u}</option>)}</select></div>
-        </div>
+      <section className={section}>
+        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-display text-xl font-semibold text-primary">Rendimento</h2>
+          <label className="flex cursor-pointer items-center gap-2 text-sm font-medium"><Switch checked={r.yieldMode === "composto"} onCheckedChange={(c) => setR((p) => ({ ...p, yieldMode: c ? "composto" : "simples", yieldItemUnit: p.yieldItemUnit ?? "unidades", yieldEachUnit: p.yieldEachUnit ?? "kg" }))} />Informar peso/medida por unidade</label></div>
+        {r.yieldMode === "composto" ? (
+          <div className="grid gap-4 sm:grid-cols-4">
+            <div className="space-y-1.5"><Label>Quantidade</Label><Input required type="number" step="1" min="0" value={r.yieldQty} onChange={(e) => set("yieldQty", e.target.value)} /></div>
+            <div className="space-y-1.5"><Label>Unidade do item</Label><select className={sel} value={r.yieldItemUnit} onChange={(e) => set("yieldItemUnit", e.target.value)}>{ITEM_UNITS.map((u) => <option key={u}>{u}</option>)}</select></div>
+            <div className="space-y-1.5"><Label>Peso/medida de cada</Label><Input required type="number" step="any" min="0" value={r.yieldEach ?? ""} onChange={(e) => set("yieldEach", e.target.value)} /></div>
+            <div className="space-y-1.5"><Label>Unidade do peso</Label><select className={sel} value={r.yieldEachUnit} onChange={(e) => set("yieldEachUnit", e.target.value)}>{EACH_UNITS.map((u) => <option key={u}>{u}</option>)}</select></div>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5"><Label>Quantidade</Label><Input required type="number" step="any" min="0" value={r.yieldQty} onChange={(e) => set("yieldQty", e.target.value)} /></div>
+            <div className="space-y-1.5"><Label>Unidade</Label><select className={sel} value={r.yieldUnit} onChange={(e) => set("yieldUnit", e.target.value)}>{YIELD_UNITS.map((u) => <option key={u}>{u}</option>)}</select></div>
+          </div>
+        )}
+        {r.yieldQty && <p className="rounded-md bg-muted px-3 py-2 text-sm">Rendimento: <strong>{formatYield(r)}</strong>{yieldTotal(r) && <> · Total estimado: <strong>{yieldTotal(r)}</strong></>}</p>}
       </section>
       <section className={section}><h2 className="font-display text-xl font-semibold text-primary">Matérias-Primas</h2>
         {r.ingredients.map((ing, i) => (
