@@ -27,10 +27,18 @@ function View() {
 
   const pdf = async () => {
     setBusy(true);
-    const html2pdf = (await import("html2pdf.js")).default;
-    await html2pdf().set({ margin: 10, filename: `Ficha - ${r.name}.pdf`, image: { type: "jpeg", quality: 0.95 }, html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }, pagebreak: { mode: ["avoid-all", "css"] } }).from(ref.current!).save();
-    setBusy(false);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas-pro"), import("jspdf")]);
+      const canvas = await html2canvas(ref.current!, { scale: 2, backgroundColor: "#ffffff" });
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const w = 190, pageH = 277, h = (canvas.height * w) / canvas.width;
+      const img = canvas.toDataURL("image/jpeg", 0.95);
+      let y = 0;
+      while (y < h) { if (y > 0) doc.addPage(); doc.addImage(img, "JPEG", 10, 10 - y, w, h); y += pageH; }
+      doc.save(`Ficha - ${r.name}.pdf`);
+    } finally {
+      setBusy(false);
+    }
   };
   const th = "border border-sheet-line bg-sheet-head px-3 py-2 text-left text-xs font-bold uppercase";
   const td = "border border-sheet-line px-3 py-1.5";

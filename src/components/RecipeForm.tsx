@@ -22,7 +22,7 @@ export function RecipeForm({ initial }: { initial?: Recipe }) {
   const nav = useNavigate();
   const set = <K extends keyof Recipe>(k: K, v: Recipe[K]) => setR((p) => ({ ...p, [k]: v }));
   const setIng = (i: number, k: "name" | "qty" | "unit", v: string) => set("ingredients", r.ingredients.map((x, j) => (j === i ? { ...x, [k]: v } : x)));
-  const move = (i: number, d: number) => { const l = [...r.ingredients]; const j = i + d; if (j < 0 || j >= l.length) return; [l[i], l[j]] = [l[j], l[i]]; set("ingredients", l); };
+  const move = (i: number, d: number) => { const l = [...r.ingredients]; const j = i + d; if (j < 0 || j >= l.length) return; const t = l[i]!; l[i] = l[j]!; l[j] = t; set("ingredients", l); };
   const submit = (e: React.FormEvent) => { e.preventDefault(); const rec = { ...r, ingredients: r.ingredients.filter((i) => i.name.trim()), updatedAt: Date.now() };
     upsertRecipe(rec); nav({ to: "/receitas/$id", params: { id: rec.id } }); };
   const section = "space-y-4 rounded-xl border bg-card p-5 shadow-warm";
