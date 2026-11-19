@@ -58,7 +58,7 @@ function View() {
           <img src={logo} alt="Casa do Sertão" className="h-20 w-20 object-contain" />
           <div className="flex-1"><p className="text-xs font-bold uppercase tracking-widest text-primary">Casa do Sertão · Ficha Técnica de Produção</p>
             <h1 className="font-display text-3xl font-bold">{r.name}</h1></div>
-          <div className="text-right text-xs"><p>Código: {r.id.slice(0, 8).toUpperCase()}</p><p>Revisão: {new Date(r.updatedAt).toLocaleDateString("pt-BR")}</p></div>
+          <div className="text-right text-xs"><p>Última modificação: {new Date(r.updatedAt).toLocaleDateString("pt-BR")}</p></div>
         </header>
         <div className="mt-5 grid grid-cols-[1fr_200px] gap-5">
           <table className="h-fit w-full border-collapse text-sm"><tbody>
