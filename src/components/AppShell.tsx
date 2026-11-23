@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { BookOpen, Plus } from "lucide-react";
+import { BookOpen, LogIn, Plus } from "lucide-react";
 import logoAsset from "@/assets/logo_casa_sertao.png.asset.json";
 const logo = logoAsset.url;
 
@@ -14,6 +14,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <nav className="flex flex-1 gap-1 md:flex-col">
             <Link to="/" className={nav} activeOptions={{ exact: true }} activeProps={{ className: "bg-sidebar-accent" }}><BookOpen className="h-4 w-4" /> Fichas Técnicas</Link>
             <Link to="/receitas/nova" className={nav} activeProps={{ className: "bg-sidebar-accent" }}><Plus className="h-4 w-4" /> Nova Ficha</Link>
+            <Link to="/login" className={`${nav} md:mt-4 text-muted-foreground`}><LogIn className="h-4 w-4" /> Tela de Login</Link>
           </nav>
         </div>
       </aside>
