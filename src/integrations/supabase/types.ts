@@ -14,7 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ficha_ingredientes: {
+        Row: {
+          created_at: string
+          ficha_id: string
+          id: string
+          nome_ingrediente: string
+          ordem: number
+          quantidade: string
+          unidade: string
+        }
+        Insert: {
+          created_at?: string
+          ficha_id: string
+          id?: string
+          nome_ingrediente: string
+          ordem?: number
+          quantidade?: string
+          unidade?: string
+        }
+        Update: {
+          created_at?: string
+          ficha_id?: string
+          id?: string
+          nome_ingrediente?: string
+          ordem?: number
+          quantidade?: string
+          unidade?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ficha_ingredientes_ficha_id_fkey"
+            columns: ["ficha_id"]
+            isOneToOne: false
+            referencedRelation: "fichas_tecnicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fichas_tecnicas: {
+        Row: {
+          categoria: string
+          created_at: string
+          id: string
+          imagem_url: string | null
+          modo_preparo: string
+          nome: string
+          rendimento_peso_unitario: string | null
+          rendimento_quantidade: string
+          rendimento_tipo: string
+          rendimento_unidade: string
+          rendimento_unidade_peso: string | null
+          updated_at: string
+          utensilios: string
+        }
+        Insert: {
+          categoria?: string
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          modo_preparo?: string
+          nome: string
+          rendimento_peso_unitario?: string | null
+          rendimento_quantidade?: string
+          rendimento_tipo?: string
+          rendimento_unidade?: string
+          rendimento_unidade_peso?: string | null
+          updated_at?: string
+          utensilios?: string
+        }
+        Update: {
+          categoria?: string
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          modo_preparo?: string
+          nome?: string
+          rendimento_peso_unitario?: string | null
+          rendimento_quantidade?: string
+          rendimento_tipo?: string
+          rendimento_unidade?: string
+          rendimento_unidade_peso?: string | null
+          updated_at?: string
+          utensilios?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
