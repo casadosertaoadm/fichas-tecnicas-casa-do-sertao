@@ -28,4 +28,4 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
-- Recipes persist in browser localStorage via src/lib/recipes.ts; PDF export uses html2canvas-pro + jspdf because html2canvas cannot parse oklch colors.
+- Recipes persist in Supabase (fichas_tecnicas + ficha_ingredientes; photos in private bucket produtos-imagens via 10-year signed URLs since public buckets are blocked) via src/lib/recipes.ts; PDF export uses html2canvas-pro + jspdf because html2canvas cannot parse oklch colors.

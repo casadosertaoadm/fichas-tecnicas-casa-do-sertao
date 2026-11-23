@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { CATEGORIES, EACH_UNITS, ING_UNITS, ITEM_UNITS, YIELD_UNITS, formatYield, yieldTotal, uid, upsertRecipe, type Category, type Recipe } from "@/lib/recipes";
+import { CATEGORIES, EACH_UNITS, ING_UNITS, ITEM_UNITS, YIELD_UNITS, formatYield, yieldTotal, uid, newId, upsertRecipe, type Category, type Recipe } from "@/lib/recipes";
 
-const empty = (): Recipe => ({ id: uid(), name: "", category: "Bolos Fofos", yieldQty: "", yieldUnit: "Unidades",
+const empty = (): Recipe => ({ id: newId(), name: "", category: "Bolos Fofos", yieldQty: "", yieldUnit: "Unidades",
   ingredients: [{ id: uid(), name: "", qty: "", unit: "g" }], equipment: "", preparation: "", updatedAt: Date.now() });
 const sel = "h-10 w-full rounded-md border border-input bg-card px-3 text-sm";
 
@@ -24,8 +24,12 @@ export function RecipeForm({ initial }: { initial?: Recipe }) {
   const set = <K extends keyof Recipe>(k: K, v: Recipe[K]) => setR((p) => ({ ...p, [k]: v }));
   const setIng = (i: number, k: "name" | "qty" | "unit", v: string) => set("ingredients", r.ingredients.map((x, j) => (j === i ? { ...x, [k]: v } : x)));
   const move = (i: number, d: number) => { const l = [...r.ingredients]; const j = i + d; if (j < 0 || j >= l.length) return; const t = l[i]!; l[i] = l[j]!; l[j] = t; set("ingredients", l); };
-  const submit = (e: React.FormEvent) => { e.preventDefault(); const rec = { ...r, ingredients: r.ingredients.filter((i) => i.name.trim()), updatedAt: Date.now() };
-    upsertRecipe(rec); nav({ to: "/receitas/$id", params: { id: rec.id } }); };
+  const [saving, setSaving] = useState(false);
+  const submit = async (e: React.FormEvent) => { e.preventDefault(); const rec = { ...r, ingredients: r.ingredients.filter((i) => i.name.trim()), updatedAt: Date.now() };
+    setSaving(true);
+    try { await upsertRecipe(rec); nav({ to: "/receitas/$id", params: { id: rec.id } }); }
+    catch (err) { console.error(err); alert("Não foi possível salvar a ficha. Tente novamente."); }
+    finally { setSaving(false); } };
   const section = "space-y-4 rounded-xl border bg-card p-5 shadow-warm";
   return (
     <form onSubmit={submit} className="mx-auto max-w-4xl space-y-6">
@@ -78,7 +82,7 @@ export function RecipeForm({ initial }: { initial?: Recipe }) {
         <div className="space-y-1.5"><Label>Utensílios e Equipamentos (um por linha)</Label><Textarea rows={4} value={r.equipment} onChange={(e) => set("equipment", e.target.value)} placeholder={"Batedeira planetária\nForno a 180 °C por 40 min"} /></div>
         <div className="space-y-1.5"><Label>Forma de Preparo (cada linha vira um passo numerado)</Label><Textarea rows={8} value={r.preparation} onChange={(e) => set("preparation", e.target.value)} /></div>
       </section>
-      <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => history.back()}>Cancelar</Button><Button type="submit" size="lg">Salvar Ficha</Button></div>
+      <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => history.back()}>Cancelar</Button><Button type="submit" size="lg" disabled={saving}>{saving ? "Salvando..." : "Salvar Ficha"}</Button></div>
     </form>
   );
 }

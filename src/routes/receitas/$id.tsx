@@ -49,7 +49,7 @@ function View() {
         <Button variant="ghost" asChild><Link to="/"><ArrowLeft /> Voltar</Link></Button>
         <div className="flex-1" />
         <Button variant="outline" asChild><Link to="/receitas/$id/editar" params={{ id }}><Pencil /> Editar</Link></Button>
-        <Button variant="outline" onClick={() => { if (confirm("Excluir esta ficha?")) { deleteRecipe(id); nav({ to: "/" }); } }}><Trash2 /> Excluir</Button>
+        <Button variant="outline" onClick={() => { if (confirm("Excluir esta ficha?")) { deleteRecipe(id).then(() => nav({ to: "/" })).catch(() => alert("Não foi possível excluir.")); } }}><Trash2 /> Excluir</Button>
         <Button variant="secondary" size="lg" onClick={() => window.print()}><Printer /> Imprimir Ficha</Button>
         <Button size="lg" onClick={pdf} disabled={busy}><FileDown /> {busy ? "Gerando..." : "Gerar PDF"}</Button>
       </div>
