@@ -5,8 +5,6 @@ import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { deleteRecipe, formatYield, yieldTotal } from "@/lib/recipes";
 import { useRecipes } from "@/lib/use-recipes";
-import logoAsset from "@/assets/logo_casa_sertao.png.asset.json";
-const logo = logoAsset.url;
 
 export const Route = createFileRoute("/_authenticated/receitas/$id")({
   head: () => ({ meta: [{ title: "Ficha Técnica · Casa do Sertão" }, { name: "description", content: "Ficha técnica de produção para impressão e PDF." },
@@ -55,7 +53,7 @@ function View() {
       </div>
       <div ref={ref} className="print-sheet mx-auto max-w-[210mm] bg-sheet p-8 text-sheet-ink shadow-warm">
         <header className="flex items-center gap-4 border-b-4 border-double border-primary pb-4">
-          <img src={logo} alt="Casa do Sertão" className="h-20 w-20 object-contain" />
+          <img src="/fichas-tecnicas-casa-do-sertao/logo_casa_sertao.png"
           <div className="flex-1"><p className="text-xs font-bold uppercase tracking-widest text-primary">Casa do Sertão · Ficha Técnica de Produção</p>
             <h1 className="font-display text-3xl font-bold">{r.name}</h1></div>
           <div className="text-right text-xs"><p>Última modificação: {new Date(r.updatedAt).toLocaleDateString("pt-BR")}</p></div>
