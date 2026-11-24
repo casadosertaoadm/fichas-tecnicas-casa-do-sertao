@@ -9,15 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as ReceitasIdRouteImport } from './routes/receitas/$id'
-import { Route as ReceitasNovaRouteImport } from './routes/receitas/nova'
-import { Route as ReceitasIdEditarRouteImport } from './routes/receitas/$id_.editar'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedReceitasIdRouteImport } from './routes/_authenticated/receitas/$id'
+import { Route as AuthenticatedReceitasNovaRouteImport } from './routes/_authenticated/receitas/nova'
+import { Route as AuthenticatedReceitasIdEditarRouteImport } from './routes/_authenticated/receitas/$id_.editar'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -25,43 +25,51 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReceitasIdRoute = ReceitasIdRouteImport.update({
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedReceitasIdRoute = AuthenticatedReceitasIdRouteImport.update({
   id: '/receitas/$id',
   path: '/receitas/$id',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ReceitasNovaRoute = ReceitasNovaRouteImport.update({
-  id: '/receitas/nova',
-  path: '/receitas/nova',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReceitasIdEditarRoute = ReceitasIdEditarRouteImport.update({
-  id: '/receitas/$id_/editar',
-  path: '/receitas/$id/editar',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const AuthenticatedReceitasNovaRoute =
+  AuthenticatedReceitasNovaRouteImport.update({
+    id: '/receitas/nova',
+    path: '/receitas/nova',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReceitasIdEditarRoute =
+  AuthenticatedReceitasIdEditarRouteImport.update({
+    id: '/receitas/$id_/editar',
+    path: '/receitas/$id/editar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
-  '/receitas/$id': typeof ReceitasIdRoute
-  '/receitas/nova': typeof ReceitasNovaRoute
-  '/receitas/$id/editar': typeof ReceitasIdEditarRoute
+  '/receitas/$id': typeof AuthenticatedReceitasIdRoute
+  '/receitas/nova': typeof AuthenticatedReceitasNovaRoute
+  '/receitas/$id/editar': typeof AuthenticatedReceitasIdEditarRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/receitas/$id': typeof ReceitasIdRoute
-  '/receitas/nova': typeof ReceitasNovaRoute
-  '/receitas/$id/editar': typeof ReceitasIdEditarRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/receitas/$id': typeof AuthenticatedReceitasIdRoute
+  '/receitas/nova': typeof AuthenticatedReceitasNovaRoute
+  '/receitas/$id/editar': typeof AuthenticatedReceitasIdEditarRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/receitas/$id': typeof ReceitasIdRoute
-  '/receitas/nova': typeof ReceitasNovaRoute
-  '/receitas/$id_/editar': typeof ReceitasIdEditarRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/receitas/$id': typeof AuthenticatedReceitasIdRoute
+  '/_authenticated/receitas/nova': typeof AuthenticatedReceitasNovaRoute
+  '/_authenticated/receitas/$id_/editar': typeof AuthenticatedReceitasIdEditarRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,31 +77,29 @@ export interface FileRouteTypes {
     '/' | '/login' | '/receitas/$id' | '/receitas/nova' | '/receitas/$id/editar'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/login' | '/receitas/$id' | '/receitas/nova' | '/receitas/$id/editar'
+    '/login' | '/' | '/receitas/$id' | '/receitas/nova' | '/receitas/$id/editar'
   id:
     | '__root__'
-    | '/'
+    | '/_authenticated'
     | '/login'
-    | '/receitas/$id'
-    | '/receitas/nova'
-    | '/receitas/$id_/editar'
+    | '/_authenticated/'
+    | '/_authenticated/receitas/$id'
+    | '/_authenticated/receitas/nova'
+    | '/_authenticated/receitas/$id_/editar'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
-  ReceitasIdRoute: typeof ReceitasIdRoute
-  ReceitasNovaRoute: typeof ReceitasNovaRoute
-  ReceitasIdEditarRoute: typeof ReceitasIdEditarRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -103,36 +109,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/receitas/$id': {
-      id: '/receitas/$id'
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/receitas/$id': {
+      id: '/_authenticated/receitas/$id'
       path: '/receitas/$id'
       fullPath: '/receitas/$id'
-      preLoaderRoute: typeof ReceitasIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedReceitasIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/receitas/nova': {
-      id: '/receitas/nova'
+    '/_authenticated/receitas/nova': {
+      id: '/_authenticated/receitas/nova'
       path: '/receitas/nova'
       fullPath: '/receitas/nova'
-      preLoaderRoute: typeof ReceitasNovaRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedReceitasNovaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/receitas/$id_/editar': {
-      id: '/receitas/$id_/editar'
+    '/_authenticated/receitas/$id_/editar': {
+      id: '/_authenticated/receitas/$id_/editar'
       path: '/receitas/$id/editar'
       fullPath: '/receitas/$id/editar'
-      preLoaderRoute: typeof ReceitasIdEditarRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedReceitasIdEditarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedReceitasIdRoute: typeof AuthenticatedReceitasIdRoute
+  AuthenticatedReceitasNovaRoute: typeof AuthenticatedReceitasNovaRoute
+  AuthenticatedReceitasIdEditarRoute: typeof AuthenticatedReceitasIdEditarRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedReceitasIdRoute: AuthenticatedReceitasIdRoute,
+  AuthenticatedReceitasNovaRoute: AuthenticatedReceitasNovaRoute,
+  AuthenticatedReceitasIdEditarRoute: AuthenticatedReceitasIdEditarRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
-  ReceitasIdRoute: ReceitasIdRoute,
-  ReceitasNovaRoute: ReceitasNovaRoute,
-  ReceitasIdEditarRoute: ReceitasIdEditarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

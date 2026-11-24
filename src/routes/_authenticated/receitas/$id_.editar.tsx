@@ -3,7 +3,7 @@ import { AppShell } from "@/components/AppShell";
 import { RecipeForm } from "@/components/RecipeForm";
 import { useRecipes } from "@/lib/use-recipes";
 
-export const Route = createFileRoute("/receitas/$id_/editar")({
+export const Route = createFileRoute("/_authenticated/receitas/$id_/editar")({
   head: () => ({ meta: [{ title: "Editar Ficha · Casa do Sertão" }, { name: "description", content: "Editar ficha técnica de produção." },
     { property: "og:title", content: "Editar Ficha · Casa do Sertão" }, { property: "og:description", content: "Editar ficha técnica de produção." }] }),
   component: Edit,

@@ -46,8 +46,10 @@ export async function loadRecipes(): Promise<Recipe[]> {
 const changed = () => window.dispatchEvent(new Event("cds-change"));
 
 async function uploadImage(id: string, dataUrl: string): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Usuário não autenticado.");
   const blob = await (await fetch(dataUrl)).blob();
-  const path = `${id}/${Date.now()}.jpg`;
+  const path = `${user.id}/${id}/${Date.now()}.jpg`;
   const up = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: true });
   if (up.error) throw up.error;
   const s = await supabase.storage.from(BUCKET).createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
@@ -56,11 +58,13 @@ async function uploadImage(id: string, dataUrl: string): Promise<string> {
 }
 
 export async function upsertRecipe(r: Recipe) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Usuário não autenticado.");
   let image = r.image ?? null;
   if (image?.startsWith("data:")) image = await uploadImage(r.id, image);
   if (image && Object.values(SEED_IMAGES).includes(image)) image = null;
   const composto = r.yieldMode === "composto";
-  const { error } = await supabase.from("fichas_tecnicas").upsert({ id: r.id, nome: r.name, categoria: r.category, imagem_url: image,
+  const { error } = await supabase.from("fichas_tecnicas").upsert({ id: r.id, user_id: user.id, nome: r.name, categoria: r.category, imagem_url: image,
     rendimento_tipo: composto ? "composto" : "simples", rendimento_quantidade: r.yieldQty, rendimento_unidade: composto ? (r.yieldItemUnit ?? "unidades") : r.yieldUnit,
     rendimento_peso_unitario: composto ? (r.yieldEach ?? null) : null, rendimento_unidade_peso: composto ? (r.yieldEachUnit ?? null) : null,
     utensilios: r.equipment, modo_preparo: r.preparation, updated_at: new Date().toISOString() });

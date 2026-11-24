@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { CATEGORIES, filterRecipes, formatYield } from "@/lib/recipes";
 import { useRecipes } from "@/lib/use-recipes";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({ meta: [
     { title: "Fichas Técnicas · Casa do Sertão" },
     { name: "description", content: "Gestão de fichas técnicas de produção da panificação Casa do Sertão." },

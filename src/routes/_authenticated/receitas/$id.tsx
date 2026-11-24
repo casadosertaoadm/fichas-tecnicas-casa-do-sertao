@@ -8,7 +8,7 @@ import { useRecipes } from "@/lib/use-recipes";
 import logoAsset from "@/assets/logo_casa_sertao.png.asset.json";
 const logo = logoAsset.url;
 
-export const Route = createFileRoute("/receitas/$id")({
+export const Route = createFileRoute("/_authenticated/receitas/$id")({
   head: () => ({ meta: [{ title: "Ficha Técnica · Casa do Sertão" }, { name: "description", content: "Ficha técnica de produção para impressão e PDF." },
     { property: "og:title", content: "Ficha Técnica · Casa do Sertão" }, { property: "og:description", content: "Ficha técnica de produção para impressão e PDF." }] }),
   component: View,

@@ -66,6 +66,7 @@ export type Database = {
           rendimento_unidade: string
           rendimento_unidade_peso: string | null
           updated_at: string
+          user_id: string | null
           utensilios: string
         }
         Insert: {
@@ -81,6 +82,7 @@ export type Database = {
           rendimento_unidade?: string
           rendimento_unidade_peso?: string | null
           updated_at?: string
+          user_id?: string | null
           utensilios?: string
         }
         Update: {
@@ -96,6 +98,7 @@ export type Database = {
           rendimento_unidade?: string
           rendimento_unidade_peso?: string | null
           updated_at?: string
+          user_id?: string | null
           utensilios?: string
         }
         Relationships: []
