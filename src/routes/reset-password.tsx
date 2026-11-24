@@ -1,6 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import logoAsset from "@/assets/logo_casa_sertao.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/reset-password")({
@@ -74,7 +73,7 @@ function ResetPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-warm">
-        <img src={logoAsset.url} alt="Casa do Sertão" width={160} height={160} className="mx-auto h-32 w-32 object-contain" />
+        <img src="/fichas-tecnicas-casa-do-sertao/logo_casa_sertao.png" alt="Casa do Sertão" width={160} height={160} className="mx-auto h-32 w-32 object-contain" />
         <h1 className="mt-4 text-center font-display text-2xl font-bold text-primary">Nova Senha</h1>
         <p className="text-center text-sm text-muted-foreground">Gestão de Produção</p>
 
