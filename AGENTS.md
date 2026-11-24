@@ -29,3 +29,4 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 - Recipes persist in Supabase (fichas_tecnicas + ficha_ingredientes + private bucket produtos-imagens shared across all authenticated team users) via src/lib/recipes.ts; app routes live under `src/routes/_authenticated/` gated by Supabase Auth with restricted login (no public signup) and password recovery at `/reset-password`; PDF export uses html2canvas-pro + jspdf because html2canvas cannot parse oklch colors.
+- GitHub Pages deploys as a static SPA under `/fichas-tecnicas-casa-do-sertao/` when `GITHUB_PAGES=true` (via `.github/workflows/deploy.yml`, `vite.config.ts` SPA mode + `nitro: false`, `src/router.tsx` `basepath`, and `dist/client/404.html` fallback), keeping `/` intact for Lovable preview and hosting.

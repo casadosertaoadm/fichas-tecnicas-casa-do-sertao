@@ -14,4 +14,29 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("matches routes under the GitHub Pages basepath without falling back to not found", () => {
+    const router = createRouter({
+      routeTree,
+      basepath: "/fichas-tecnicas-casa-do-sertao",
+      context: { queryClient: new QueryClient() },
+    });
+
+    for (const path of [
+      "/fichas-tecnicas-casa-do-sertao/",
+      "/fichas-tecnicas-casa-do-sertao/login",
+      "/fichas-tecnicas-casa-do-sertao/reset-password",
+      "/fichas-tecnicas-casa-do-sertao/receitas/nova",
+    ]) {
+      const parsed = router.parseLocation({
+        href: path,
+        pathname: path,
+        search: "",
+        hash: "",
+        state: { __TSR_index: 0 },
+      });
+      const matches = router.matchRoutes(parsed.pathname);
+      expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+    }
+  });
 });

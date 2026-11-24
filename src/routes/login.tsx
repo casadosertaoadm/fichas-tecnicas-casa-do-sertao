@@ -55,8 +55,9 @@ function LoginPage() {
         }
         navigate({ to: "/" });
       } else {
+        const basePath = import.meta.env.BASE_URL.replace(/\/+$/, "");
         const { error: err } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: `${window.location.origin}${basePath}/reset-password`,
         });
         if (err) {
           setError("Não foi possível enviar o e-mail de redefinição. Tente novamente.");
