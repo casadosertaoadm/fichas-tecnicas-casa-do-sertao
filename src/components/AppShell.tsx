@@ -15,7 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen md:flex">
       <aside className="no-print border-b border-sidebar-border bg-sidebar md:sticky md:top-0 md:h-screen md:w-64 md:border-b-0 md:border-r">
         <div className="flex items-center gap-3 p-4 md:flex-col md:items-stretch md:gap-6 md:p-6">
-          <Link to="/"><img src="./logo_casa_sertao.png" alt="Casa do Sertão" width={200} height={200} className="h-14 w-14 object-contain md:mx-auto md:h-36 md:w-36" /></Link>
+          <Link to="/"><img src=""/fichas-tecnicas-casa-do-sertao/logo_casa_sertao.png" alt="Casa do Sertão" width={200} height={200} className="h-14 w-14 object-contain md:mx-auto md:h-36 md:w-36" /></Link>
           <nav className="flex flex-1 gap-1 md:flex-col">
             <Link to="/" className={nav} activeOptions={{ exact: true }} activeProps={{ className: "bg-sidebar-accent" }}><BookOpen className="h-4 w-4" /> Fichas Técnicas</Link>
             <Link to="/receitas/nova" className={nav} activeProps={{ className: "bg-sidebar-accent" }}><Plus className="h-4 w-4" /> Nova Ficha</Link>
