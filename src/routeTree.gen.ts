@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedReceitasIdRouteImport } from './routes/_authenticated/receitas/$id'
 import { Route as AuthenticatedReceitasNovaRouteImport } from './routes/_authenticated/receitas/nova'
@@ -23,6 +24,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
@@ -51,12 +57,14 @@ const AuthenticatedReceitasIdEditarRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/receitas/$id': typeof AuthenticatedReceitasIdRoute
   '/receitas/nova': typeof AuthenticatedReceitasNovaRoute
   '/receitas/$id/editar': typeof AuthenticatedReceitasIdEditarRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/': typeof AuthenticatedIndexRoute
   '/receitas/$id': typeof AuthenticatedReceitasIdRoute
   '/receitas/nova': typeof AuthenticatedReceitasNovaRoute
@@ -66,6 +74,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/receitas/$id': typeof AuthenticatedReceitasIdRoute
   '/_authenticated/receitas/nova': typeof AuthenticatedReceitasNovaRoute
@@ -74,14 +83,25 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/login' | '/receitas/$id' | '/receitas/nova' | '/receitas/$id/editar'
+    | '/'
+    | '/login'
+    | '/reset-password'
+    | '/receitas/$id'
+    | '/receitas/nova'
+    | '/receitas/$id/editar'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/login' | '/' | '/receitas/$id' | '/receitas/nova' | '/receitas/$id/editar'
+    | '/login'
+    | '/reset-password'
+    | '/'
+    | '/receitas/$id'
+    | '/receitas/nova'
+    | '/receitas/$id/editar'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
+    | '/reset-password'
     | '/_authenticated/'
     | '/_authenticated/receitas/$id'
     | '/_authenticated/receitas/nova'
@@ -91,6 +111,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -107,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/': {
@@ -160,6 +188,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

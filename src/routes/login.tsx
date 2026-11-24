@@ -10,6 +10,8 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Acesso ao sistema de gestão de fichas técnicas da Casa do Sertão." },
       { property: "og:title", content: "Login · Casa do Sertão" },
       { property: "og:description", content: "Acesso ao sistema de gestão de fichas técnicas da Casa do Sertão." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: LoginPage,
@@ -17,7 +19,7 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<"login" | "forgot">("login");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,12 +37,12 @@ function LoginPage() {
     setError(null);
     setInfo(null);
     const cleanEmail = email.trim();
-    if (!cleanEmail || !senha) {
-      setError("Informe e-mail e senha.");
+    if (!cleanEmail) {
+      setError("Informe seu e-mail.");
       return;
     }
-    if (mode === "signup" && senha.length < 6) {
-      setError("A senha precisa ter pelo menos 6 caracteres.");
+    if (mode === "login" && !senha) {
+      setError("Informe e-mail e senha.");
       return;
     }
     setLoading(true);
@@ -53,21 +55,14 @@ function LoginPage() {
         }
         navigate({ to: "/" });
       } else {
-        const { data, error: err } = await supabase.auth.signUp({
-          email: cleanEmail,
-          password: senha,
-          options: { emailRedirectTo: window.location.origin },
+        const { error: err } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+          redirectTo: `${window.location.origin}/reset-password`,
         });
         if (err) {
-          setError(err.message);
+          setError("Não foi possível enviar o e-mail de redefinição. Tente novamente.");
           return;
         }
-        if (data.session) {
-          navigate({ to: "/" });
-        } else {
-          setInfo("Conta criada! Verifique seu e-mail para confirmar o acesso.");
-          setMode("login");
-        }
+        setInfo("Se o e-mail estiver cadastrado, enviamos um link para redefinir sua senha.");
       }
     } finally {
       setLoading(false);
@@ -80,24 +75,28 @@ function LoginPage() {
       <div className="w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-warm">
         <img src={logoAsset.url} alt="Casa do Sertão" width={160} height={160} className="mx-auto h-32 w-32 object-contain" />
         <h1 className="mt-4 text-center font-display text-2xl font-bold text-primary">
-          {mode === "login" ? "Acesso ao Sistema" : "Criar Conta"}
+          {mode === "login" ? "Acesso ao Sistema" : "Redefinir Senha"}
         </h1>
-        <p className="text-center text-sm text-muted-foreground">Gestão de Produção</p>
+        <p className="text-center text-sm text-muted-foreground">
+          {mode === "login" ? "Gestão de Produção" : "Informe seu e-mail para receber o link de redefinição."}
+        </p>
         {error && <p role="alert" className="mt-4 rounded-md bg-destructive/10 px-3 py-2 text-center text-sm text-destructive">{error}</p>}
         {info && <p className="mt-4 rounded-md bg-accent px-3 py-2 text-center text-sm text-accent-foreground">{info}</p>}
         <form onSubmit={submit} className="mt-6 space-y-4">
           <label className="block text-sm font-semibold text-foreground">E-mail
             <input type="email" required className={`${input} mt-1 font-normal`} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" autoComplete="email" />
           </label>
-          <label className="block text-sm font-semibold text-foreground">Senha
-            <input type="password" required className={`${input} mt-1 font-normal`} value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="••••••••" autoComplete={mode === "login" ? "current-password" : "new-password"} />
-          </label>
+          {mode === "login" && (
+            <label className="block text-sm font-semibold text-foreground">Senha
+              <input type="password" required className={`${input} mt-1 font-normal`} value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="••••••••" autoComplete="current-password" />
+            </label>
+          )}
           <button type="submit" disabled={loading} className="w-full rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
-            {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta"}
+            {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Enviar link de redefinição"}
           </button>
         </form>
-        <button type="button" onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError(null); setInfo(null); }} className="mt-4 block w-full text-center text-sm font-medium text-secondary underline-offset-4 hover:underline">
-          {mode === "login" ? "Não tem conta? Cadastre-se" : "Já tem conta? Entrar"}
+        <button type="button" onClick={() => { setMode(mode === "login" ? "forgot" : "login"); setError(null); setInfo(null); }} className="mt-4 block w-full text-center text-sm font-medium text-secondary underline-offset-4 hover:underline">
+          {mode === "login" ? "Esqueci minha senha" : "Voltar para o login"}
         </button>
       </div>
     </div>
