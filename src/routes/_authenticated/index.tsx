@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Plus, ChefHat, ArrowLeft, X, Cake, CakeSlice, Cookie, Croissant, CupSoda, Wheat } from "lucide-react";
+import { Search, Plus, ChefHat, ArrowLeft, X, Cake, CakeSlice, Cookie, Croissant, CupSoda, Dessert, Popsicle, Wheat } from "lucide-react";
 
-const ICONS = { "Bolos Fofos": Cake, "Bolos Ligados": CakeSlice, Biscoitos: Cookie, Rocamboles: Croissant, Recheios: CupSoda, Diversos: Wheat };
+const ICONS = { "Bolos Fofos": Cake, "Bolos Ligados": CakeSlice, Biscoitos: Cookie, Rocamboles: Croissant, Recheios: CupSoda, Brownies: Dessert, Dindins: Popsicle, Diversos: Wheat };
 import { AppShell } from "@/components/AppShell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

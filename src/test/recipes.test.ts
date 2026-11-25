@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { filterRecipes, type Recipe } from "@/lib/recipes";
+import { CATEGORIES, filterRecipes, type Recipe } from "@/lib/recipes";
+describe("categorias", () => {
+  it("inclui Brownies e Dindins", () => {
+    expect(CATEGORIES).toContain("Brownies");
+    expect(CATEGORIES).toContain("Dindins");
+  });
+  it("filtra por Brownies", () => expect(filterRecipes([r("Brownie de Chocolate", "Brownies", "Chocolate")], "", "Brownies").map((x) => x.id)).toEqual(["Brownie de Chocolate"]));
+});
 const r = (name: string, category: Recipe["category"], ing: string): Recipe => ({ id: name, name, category, yieldQty: "1", yieldUnit: "Kg", ingredients: [{ id: "1", name: ing, qty: "1", unit: "g" }], equipment: "", preparation: "", updatedAt: 0 });
 const list = [r("Bolo de Macaxeira", "Bolos Ligados", "Coco ralado"), r("Rocambole", "Rocamboles", "Ovos")];
 describe("busca de fichas", () => {

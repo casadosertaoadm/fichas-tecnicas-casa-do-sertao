@@ -2,7 +2,7 @@ import rocamboleImg from "@/assets/rocambole.jpg";
 import macaxeiraImg from "@/assets/bolo-macaxeira.jpg";
 import { supabase } from "@/integrations/supabase/client";
 
-export const CATEGORIES = ["Bolos Fofos", "Bolos Ligados", "Biscoitos", "Rocamboles", "Recheios", "Diversos"] as const;
+export const CATEGORIES = ["Bolos Fofos", "Bolos Ligados", "Biscoitos", "Rocamboles", "Recheios", "Brownies", "Dindins", "Diversos"] as const;
 export type Category = (typeof CATEGORIES)[number];
 export const YIELD_UNITS = ["Unidades", "Kg", "Gramas", "Formas", "Assadeiras", "Litros"];
 export const ING_UNITS = ["Kg", "g", "L", "ml", "Unidades", "Colheres", "Xícaras"];
